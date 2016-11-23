@@ -1,0 +1,19 @@
+FROM ailispaw/ubuntu-essential:16.04-nodoc
+
+RUN apt-get update -q && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -q -y --no-install-recommends \
+      curl ca-certificates apt-transport-https locales && \
+
+    curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+    curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list \
+      | tee /etc/apt/sources.list.d/msprod.list && \
+
+    apt-get update -q && \
+    DEBIAN_FRONTEND=noninteractive ACCEPT_EULA=Y apt-get install -q -y --no-install-recommends \
+      mssql-tools && \
+
+    apt-get clean -q && \
+    rm -rf /var/cache/apt /var/lib/apt/lists /var/cache/debconf/* /var/log/*
+
+# MS SQL ODBC driver needs en_US.UTF-8 locale.
+RUN localedef --force --quiet --no-archive --little-endian -i en_US -f UTF-8 en_US.UTF-8

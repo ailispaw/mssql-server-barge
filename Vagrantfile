@@ -33,4 +33,9 @@ Vagrant.configure(2) do |config|
         "-e SA_PASSWORD=#{SA_PASSWORD}"
       ].join(" ")
   end
+
+  config.vm.provision :docker do |d|
+    #d.build_image "/vagrant", args: "-t ailispaw/mssql-tools-linux -f /vagrant/Dockerfile.tools"
+    d.pull_images "ailispaw/mssql-tools-linux"
+  end
 end
